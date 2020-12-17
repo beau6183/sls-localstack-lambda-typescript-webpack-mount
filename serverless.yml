@@ -5,11 +5,14 @@ service:
 #org: your-org-name
 
 custom:
+  environment:
+    LAMBDA_MOUNT_CWD: ./.webpack/service
   stages:
     - local
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+    keepOutputDirectory: true
   localstack:
     debug: true
     stages:
@@ -17,10 +20,10 @@ custom:
       - local
     host: http://localhost  # optional - LocalStack host to connect to
     edgePort: 4566  # optional - LocalStack edge port to connect to
-    autostart: true  # optional - start LocalStack in Docker on Serverless deploy
+    autostart: false  # optional - start LocalStack in Docker on Serverless deploy
     lambda:
       # Enable this flag to improve performance
-      mountCode: true
+      mountCode: false
     docker:
       # Enable this flag to run "docker ..." commands as sudo
       sudo: false
@@ -37,6 +40,8 @@ provider:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    # LAMBDA_MOUNT_CWD: ./.webpack/service
+    LAMBDA_REMOTE_DOCKER: 0
 
 functions:
   hello:
